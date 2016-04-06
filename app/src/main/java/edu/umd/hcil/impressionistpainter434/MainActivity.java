@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements OnMenuItemClickListener {
 
@@ -112,6 +113,66 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
     }
 
 
+    //from:
+    //http://code.tutsplus.com/tutorials/android-sdk-create-a-drawing-app-essential-functionality--mobile-19328
+    public void onButtonClickSave(View v) {
+
+        //save drawing
+        AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
+        saveDialog.setTitle("Save drawing");
+        saveDialog.setMessage("Save drawing to device Gallery?");
+        saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int which){
+
+                //fixMediaDir();
+
+                //save drawing
+                _impressionistView.setDrawingCacheEnabled(true);
+
+                _impressionistView.buildDrawingCache();
+
+                Bitmap viewBmp = Bitmap.createBitmap(_impressionistView.getDrawingCache());
+
+                _impressionistView.setDrawingCacheEnabled(false);
+                //attempt to save
+
+                String imgSaved = MediaStore.Images.Media.insertImage(
+                        //getContentResolver(), _impressionistView.getDrawingCache(),
+                        getContentResolver(), _impressionistView._offScreenBitmap,
+                        UUID.randomUUID().toString()+".jpg", "drawing");
+                //feedback
+                if(imgSaved!=null){
+                    Toast savedToast = Toast.makeText(getApplicationContext(),
+                            "Drawing saved to Gallery!", Toast.LENGTH_SHORT);
+                    savedToast.show();
+                }
+                else{
+                    Toast unsavedToast = Toast.makeText(getApplicationContext(),
+                            "Oops! Image could not be saved.", Toast.LENGTH_SHORT);
+                    unsavedToast.show();
+                }
+                _impressionistView.destroyDrawingCache();
+            }
+        });
+        saveDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int which){
+                dialog.cancel();
+            }
+        });
+        saveDialog.show();
+    }
+    void fixMediaDir() {
+        File sdcard = Environment.getExternalStorageDirectory();
+        if (sdcard != null) {
+            File mediaDir = new File(sdcard, "DCIM/Camera");
+            if (!mediaDir.exists()) {
+                mediaDir.mkdirs();
+            }
+        }
+    }
+    private static String getGalleryPath() {
+        return Environment.getExternalStorageDirectory() + "/" + Environment.DIRECTORY_DCIM + "/";
+    }
     /**
      * Downloads test images to use in the assignment. Feel free to use any images you want. I only made this
      * as an easy way to get images onto the emulator.
