@@ -15,13 +15,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="2">
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_weight="1.9"
             android:weightSum="2">
 
@@ -66,6 +66,14 @@
                 android:text="Brush"
                 android:id="@+id/buttonBrush"
                 android:onClick="onButtonClickSetBrush"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal"
+            android:layout_weight="0.1">
 
             <Button
                 android:layout_width="wrap_content"
@@ -81,6 +89,12 @@
                 android:id="@+id/buttonSave"
                 android:onClick="onButtonClickSave"/>
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="background"
+                android:id="@+id/background"
+                android:onClick="onButtonClickBackground"/>
 
         </LinearLayout>
 

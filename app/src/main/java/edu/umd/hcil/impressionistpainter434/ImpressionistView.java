@@ -1,6 +1,7 @@
 package edu.umd.hcil.impressionistpainter434;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -45,6 +46,8 @@ public class ImpressionistView extends View {
     private float _minBrushRadius = 5;
 
     private VelocityTracker mVelocityTracker = null;
+
+    public Bitmap overlay;
 
     public ImpressionistView(Context context) {
         super(context);
@@ -127,6 +130,12 @@ public class ImpressionistView extends View {
         invalidate();
     }
 
+    public void setBitmap(Bitmap bitmap){
+
+        overlay = bitmap;
+        Log.d("", "in setBitmap bitmap height " + overlay.getHeight());
+    }
+
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -150,91 +159,50 @@ public class ImpressionistView extends View {
         float curTouchX = motionEvent.getX();
         float curTouchY = motionEvent.getY();
 
-        int height = _imageView.getHeight();
-        int width = _imageView.getWidth();
-
-        Log.d("", "curTouchX: " + curTouchX + " curTouchY: " + curTouchY );
-        Log.d("", "height: " + height + " width: " + width);
-
         int curTouchXRounded = (int) curTouchX;
         int curTouchYRounded = (int) curTouchY;
-
-        int index = motionEvent.getActionIndex();
-        int action = motionEvent.getActionMasked();
-        int pointerId = motionEvent.getPointerId(index);
 
         int historySize = motionEvent.getHistorySize();
 
         switch(motionEvent.getAction()){
             case MotionEvent.ACTION_DOWN:
 
+                Log.d("", "ACTION_DOWN " + _lastPointTime);
+
                 _lastPointTime = motionEvent.getEventTime();
                 _lastPoint = new Point(curTouchXRounded, curTouchYRounded);
-
                 _lastPointTime = motionEvent.getEventTime();
 
-                Log.d("", "motionDown " + _lastPointTime);
-/*
-                if(mVelocityTracker == null) {
-                    // Retrieve a new VelocityTracker object to watch the velocity of a motion.
-                    mVelocityTracker = VelocityTracker.obtain();
-                }
-                else {
-                    // Reset the velocity tracker back to its initial state.
-                    mVelocityTracker.clear();
-                }
-                // Add a user's movement to the tracker.
-                mVelocityTracker.addMovement(motionEvent);
-*/
                 break;
             case MotionEvent.ACTION_MOVE:
-/*
-                mVelocityTracker.addMovement(motionEvent);
-                // When you want to determine the velocity, call 
-                // computeCurrentVelocity(). Then call getXVelocity() 
-                // and getYVelocity() to retrieve the velocity for each pointer ID. 
-                mVelocityTracker.computeCurrentVelocity(1000);
-                // Log velocity of pixels per second
-                // Best practice to use VelocityTrackerCompat where possible.
-                Log.d("", "X velocity: " + 
-                        VelocityTrackerCompat.getXVelocity(mVelocityTracker,
-                                pointerId));
-                Log.d("", "Y velocity: " + 
-                        VelocityTrackerCompat.getYVelocity(mVelocityTracker,
-                        pointerId));
-*/
+
+                Log.d("", "ACTION_MOVE @" + _lastPointTime);
+
                 //from:
                 //http://stackoverflow.com/questions/7807360/how-to-get-pixel-colour-in-android
-                Bitmap bitmap = _imageView.getDrawingCache();
+                Bitmap bitmap; //= _imageView.getDrawingCache();
+                //Bitmap bitmap = ((BitmapDrawable)_imageView.getDrawable()).getBitmap();
 
+
+                if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+                    //bitmap = overlay;
+                    //Log.d("", "bitmap height after assignment from overlay bitmap" + bitmap.getHeight());
+                } else {
+                    //bitmap = _imageView.getDrawingCache();
+                }
+                bitmap = _imageView.getDrawingCache();
                 // For efficiency, motion events with ACTION_MOVE may batch together multiple movement samples within a single object.
                 // The most current pointer coordinates are available using getX(int) and getY(int).
                 // Earlier coordinates within the batch are accessed using getHistoricalX(int, int) and getHistoricalY(int, int).
                 // See: http://developer.android.com/reference/android/view/MotionEvent.html
-
-                if(curTouchXRounded < 0 || curTouchXRounded > _imageView.getWidth())
-                    break;
-
-                if(curTouchYRounded < 0 || curTouchYRounded > _imageView.getHeight())
-                    break;
-
-
 
                 for (int i = 0; i < historySize; i++) {
 
                     float touchX = motionEvent.getHistoricalX(i);
                     float touchY = motionEvent.getHistoricalY(i);
 
-                    //if(touchX < 0 || touchX > _imageView.getWidth())
-                     //   break;
-
-                   // if(touchY < 0 || touchY > _imageView.getHeight())
-                      //  break;
-
-
                     try {
                         int pixel = bitmap.getPixel(curTouchXRounded, curTouchYRounded);
-
 
                         int red = Color.red(pixel);
                         int blue = Color.blue(pixel);
@@ -242,6 +210,10 @@ public class ImpressionistView extends View {
                         int color = Color.argb(_alpha, red, green, blue);
 
                         _paint.setColor(color);
+
+                        Log.d("", "bitmap height in Historical loop" + bitmap.getHeight());
+                        Log.d("", "green" + green);
+
                     } catch(NullPointerException e) {
                         Log.d("", "Historical null pointer exception");
                         break;
@@ -250,15 +222,11 @@ public class ImpressionistView extends View {
                         Log.d("", "Historical IllegalArgumentException");
                         break;
                     }
-                    _paint.setAlpha(_alpha);
-                    _paint.setAntiAlias(true);
-                    _paint.setStyle(Paint.Style.FILL);
-                    _paint.setStrokeWidth(4);
 
                     // TODO: draw to the offscreen bitmap for current x,y point.
-                    // Insert one line of code here                   
-
+                    // Insert one line of code here
                     //_offScreenCanvas.drawPoint(touchX, touchY, _paint);
+
                     if(_brushType == BrushType.Square){
 
                         _offScreenCanvas.drawRect(curTouchX, curTouchY, curTouchX + 12, curTouchY + 12, _paint);
@@ -271,12 +239,13 @@ public class ImpressionistView extends View {
                     }
                 }
 
+                Log.d("", "End historical loop");
 
                     // TODO: draw to the offscreen bitmap for historical x,y points
                     // Insert one line of code here
+
                     try{
                         int pixel = bitmap.getPixel(curTouchXRounded, curTouchYRounded);
-
                         int red = Color.red(pixel);
                         int blue = Color.blue(pixel);
                         int green = Color.green(pixel);
@@ -284,6 +253,9 @@ public class ImpressionistView extends View {
                         int color = Color.argb(_alpha, red, green, blue);
 
                         _paint.setColor(color);
+
+                        Log.d("", "one line bitmap height " + bitmap.getHeight());
+                        Log.d("", "green" + green);
 
                     } catch(NullPointerException e) {
                         Log.d("", "Current null pointer exception");
@@ -293,10 +265,6 @@ public class ImpressionistView extends View {
                         Log.d("", "Current IllegalArgumentException");
                         break;
                     }
-                    _paint.setAlpha(_alpha);
-                    _paint.setAntiAlias(true);
-                    _paint.setStyle(Paint.Style.FILL);
-                    _paint.setStrokeWidth(4);
 
                     Random ran = new Random();
 
@@ -368,8 +336,8 @@ public class ImpressionistView extends View {
                 _lastPointTime = -1;
                 _lastPoint = null;
 
-                Log.d("", "motionUp " + motionEvent.getEventTime());
-
+                Log.d("", "ACTION_UP @ " + motionEvent.getEventTime());
+                //setVisibility(View.GONE);
                 break;
 
         }

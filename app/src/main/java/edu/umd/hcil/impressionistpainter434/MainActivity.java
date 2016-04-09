@@ -1,24 +1,31 @@
 package edu.umd.hcil.impressionistpainter434;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.ActionMenuView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -30,7 +37,16 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity implements OnMenuItemClickListener {
 
     private static int RESULT_LOAD_IMAGE = 1;
+
+    private static String LOADED_IMAGE = "image";
+    private static String LOADED_IMPRESSIONIST = "impressionist";
+
+    private Bitmap currentImage;
+    //private Bitmap impressionistImage;
+
     private  ImpressionistView _impressionistView;
+
+    //private ImageView imageView;
 
     // These images are downloaded and added to the Android Gallery when the 'Download Images' button is clicked.
     // This was super useful on the emulator where there are no images by default
@@ -63,8 +79,84 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
         _impressionistView = (ImpressionistView)findViewById(R.id.viewImpressionist);
         ImageView imageView = (ImageView)findViewById(R.id.viewImage);
         _impressionistView.setImageView(imageView);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle b){
+
+        //save image
+        b.putParcelable(LOADED_IMAGE, currentImage);
+        //b.putParcelable(LOADED_IMPRESSIONIST, impressionistImage);
+
+        Log.d("", "At onSaveInstanceState");
 
     }
+
+    @Override
+    public void onRestoreInstanceState(Bundle b){
+
+        currentImage = b.getParcelable(LOADED_IMAGE);
+        ImageView imageView = (ImageView)findViewById(R.id.viewImage);
+
+        //reset main image
+        imageView.destroyDrawingCache();
+        imageView.setImageBitmap(currentImage);
+        imageView.setDrawingCacheEnabled(true);
+
+        imageView.destroyDrawingCache();
+        Bitmap impressionistImage = Bitmap.createBitmap(imageView.getDrawingCache());
+        imageView.setDrawingCacheEnabled(true);
+
+        _impressionistView.setBackground(new BitmapDrawable(getResources(), impressionistImage));
+
+
+        //_impressionistView.setBackground(new BitmapDrawable(getResources(), currentImage));
+
+        //reset impressionist image
+/*
+
+        imageView.setDrawingCacheEnabled(false);
+        imageView.destroyDrawingCache();
+
+        imageView.setDrawingCacheEnabled(true);
+
+        Bitmap impressionistImage = Bitmap.createBitmap(imageView.getDrawingCache());
+        imageView.setDrawingCacheEnabled(false);
+
+
+        _impressionistView.setBackground(new BitmapDrawable(getResources(), impressionistImage));
+
+        imageView.destroyDrawingCache();
+
+
+        //impressionistImage = b.getParcelable(LOADED_IMPRESSIONIST);
+        //impressionistImage = Bitmap.createBitmap(impressionistImage);
+        //_impressionistView.setBackground(new BitmapDrawable(getResources(), impressionistImage));
+*/
+        Log.d("", "At onRestoreInstanceState");
+
+    }
+
+    public void onButtonClickBackground(View v) {
+
+        Log.d("", "At onButtonClickBackground");
+
+        ImageView imageView = (ImageView) findViewById(R.id.viewImage);
+
+        imageView.destroyDrawingCache();
+        Bitmap impressionistImage = Bitmap.createBitmap(imageView.getDrawingCache());
+        imageView.setDrawingCacheEnabled(true);
+
+        _impressionistView.setBackground(new BitmapDrawable(getResources(), impressionistImage));
+
+
+
+        // destroy the drawing cache to ensure that when a new image is loaded, its cached
+
+        imageView.destroyDrawingCache();
+    }
+
+
 
     public void onButtonClickClear(View v) {
         new AlertDialog.Builder(this)
@@ -77,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
                         _impressionistView.clearPainting();
                     }})
                 .setNegativeButton(android.R.string.no, null).show();
+
     }
 
     public void onButtonClickSetBrush(View v) {
@@ -121,8 +214,8 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
         AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
         saveDialog.setTitle("Save drawing");
         saveDialog.setMessage("Save drawing to device Gallery?");
-        saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int which){
+        saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
 
                 //fixMediaDir();
 
@@ -139,14 +232,13 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
                 String imgSaved = MediaStore.Images.Media.insertImage(
                         //getContentResolver(), _impressionistView.getDrawingCache(),
                         getContentResolver(), _impressionistView._offScreenBitmap,
-                        UUID.randomUUID().toString()+".jpg", "drawing");
+                        UUID.randomUUID().toString() + ".jpg", "drawing");
                 //feedback
-                if(imgSaved!=null){
+                if (imgSaved != null) {
                     Toast savedToast = Toast.makeText(getApplicationContext(),
                             "Drawing saved to Gallery!", Toast.LENGTH_SHORT);
                     savedToast.show();
-                }
-                else{
+                } else {
                     Toast unsavedToast = Toast.makeText(getApplicationContext(),
                             "Oops! Image could not be saved.", Toast.LENGTH_SHORT);
                     unsavedToast.show();
@@ -254,6 +346,27 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
             Uri imageUri = data.getData();
 
             try {
+
+                currentImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                ImageView imageView = (ImageView) findViewById(R.id.viewImage);
+
+                // destroy the drawing cache to ensure that when a new image is loaded, its cached
+
+                imageView.destroyDrawingCache();
+                imageView.setImageBitmap(currentImage);
+                imageView.setDrawingCacheEnabled(true);
+
+/*
+                imageView.destroyDrawingCache();
+                Bitmap impressionistImage = imageView.getDrawingCache();
+                imageView.setDrawingCacheEnabled(true);
+
+                //currentImage = imageView.getDrawingCache();
+
+                _impressionistView.setBackground(new BitmapDrawable(getResources(), impressionistImage));
+
+*/
+                /*
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                 ImageView imageView = (ImageView) findViewById(R.id.viewImage);
 
@@ -261,6 +374,7 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
                 imageView.destroyDrawingCache();
                 imageView.setImageBitmap(bitmap);
                 imageView.setDrawingCacheEnabled(true);
+                */
             } catch (IOException e) {
                 e.printStackTrace();
             }
