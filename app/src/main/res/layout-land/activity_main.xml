@@ -47,49 +47,113 @@
             android:orientation="horizontal"
             android:layout_weight="0.1">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Download Images"
-                android:id="@+id/buttonDownloadImages"
-                android:onClick="onButtonClickDownloadImages"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Load Image"
-                android:id="@+id/buttonLoadImage"
-                android:onClick="onButtonClickLoadImage"/>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/buttonDownloadImages"
+                    android:onClick="onButtonClickDownloadImages"
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Brush"
-                android:id="@+id/buttonBrush"
-                android:onClick="onButtonClickSetBrush"/>
+                    android:background="#0000"
+                    android:layout_marginLeft="20dp"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Clear"
-                android:id="@+id/buttonClear"
-                android:onClick="onButtonClickClear"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Save"
-                android:id="@+id/buttonSave"
-                android:onClick="onButtonClickSave"/>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="background"
-                android:id="@+id/background"
-                android:onClick="onButtonClickBackground"/>
+
+                    android:src="@drawable/download"
+
+                    />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Load Image"
+                    android:id="@+id/buttonLoadImage"
+                    android:onClick="onButtonClickLoadImage"
+
+                    android:background="#0000"
+                    android:layout_marginLeft="20dp"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+
+
+
+                    android:src="@drawable/load"/>
+
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Save"
+                    android:id="@+id/buttonSave"
+                    android:onClick="onButtonClickSave"
+                    android:layout_gravity="right"
+                    android:layout_weight="0.1"
+
+                    android:background="#0000"
+                    android:layout_marginLeft="20dp"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+
+
+
+                    android:src="@drawable/save"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Brush"
+                    android:id="@+id/buttonBrush"
+                    android:onClick="onButtonClickSetBrush"
+                    android:layout_weight="0.1"
+
+                    android:background="#0000"
+                    android:layout_marginLeft="20dp"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+
+
+
+                    android:src="@drawable/brush"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="background"
+                    android:id="@+id/background"
+                    android:onClick="onButtonClickBackground"
+                    android:layout_gravity="right"
+                    android:layout_weight="0.1"
+
+                    android:background="#0000"
+                    android:layout_marginLeft="20dp"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+
+
+
+                    android:src="@drawable/background"/>
+
+                <ImageButton
+
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:id="@+id/buttonClear"
+                    android:onClick="onButtonClickClear"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0.1"
+
+                    android:background="#0000"
+                    android:layout_marginLeft="20dp"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+
+                    android:src="@drawable/clear"/>
 
 
         </LinearLayout>
-
     </LinearLayout>
 </RelativeLayout>

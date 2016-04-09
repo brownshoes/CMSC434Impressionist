@@ -293,8 +293,8 @@ public class ImpressionistView extends View {
 
                         Log.d("", "distance: " + distance + " time: " + time + " velocity: " + velocity);
 
-                        //_offScreenCanvas.drawCircle(curTouchX, curTouchY, _defaultRadius * velocity, _paint);
-                        _offScreenCanvas.drawCircle(curTouchX, curTouchY, _defaultRadius - 18, _paint);
+                        _offScreenCanvas.drawCircle(curTouchX, curTouchY, _defaultRadius * velocity, _paint);
+                        //_offScreenCanvas.drawCircle(curTouchX, curTouchY, _defaultRadius - 18, _paint);
 
                         _lastPointTime = motionEvent.getEventTime();
                         _lastPoint.set(curTouchXRounded, curTouchYRounded);

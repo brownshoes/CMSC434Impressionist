@@ -44,28 +44,73 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:orientation="horizontal"
-            android:layout_weight="0.1">
+            android:layout_weight="0.1"
+           >
 
-            <Button
+
+
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Download Images"
-                android:id="@+id/buttonDownloadImages"
-                android:onClick="onButtonClickDownloadImages"/>
+                android:text="Clear"
+                android:id="@+id/buttonClear"
+                android:onClick="onButtonClickClear"
 
-            <Button
+                android:background="#0000"
+                android:layout_marginLeft="3dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+
+
+                android:src="@drawable/clear"/>
+
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Load Image"
-                android:id="@+id/buttonLoadImage"
-                android:onClick="onButtonClickLoadImage"/>
+                android:text="Save"
+                android:id="@+id/buttonSave"
+                android:onClick="onButtonClickSave"
 
-            <Button
+                android:background="#0000"
+                android:layout_marginLeft="3dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+
+
+
+                android:src="@drawable/save"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="background"
+                android:id="@+id/background"
+                android:onClick="onButtonClickBackground"
+
+                android:background="#0000"
+                android:layout_marginLeft="3dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+
+
+
+                android:src="@drawable/background"/>
+
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Brush"
                 android:id="@+id/buttonBrush"
-                android:onClick="onButtonClickSetBrush"/>
+                android:onClick="onButtonClickSetBrush"
+
+                android:background="#0000"
+                android:layout_marginLeft="3dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+
+
+
+                android:src="@drawable/brush"/>
         </LinearLayout>
 
         <LinearLayout
@@ -73,28 +118,40 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:orientation="horizontal"
-            android:layout_weight="0.1">
+            android:layout_weight="0.1"
+            android:paddingTop="5dp">
 
-            <Button
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Clear"
-                android:id="@+id/buttonClear"
-                android:onClick="onButtonClickClear"/>
+                android:text="Download Images"
+                android:id="@+id/buttonDownloadImages"
+                android:onClick="onButtonClickDownloadImages"
 
-            <Button
+                android:background="#0000"
+                android:layout_marginLeft="75dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+
+
+
+                android:src="@drawable/download"/>
+
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Save"
-                android:id="@+id/buttonSave"
-                android:onClick="onButtonClickSave"/>
+                android:text="Load Image"
+                android:id="@+id/buttonLoadImage"
+                android:onClick="onButtonClickLoadImage"
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="background"
-                android:id="@+id/background"
-                android:onClick="onButtonClickBackground"/>
+                android:background="#0000"
+                android:layout_marginLeft="75dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+
+
+
+                android:src="@drawable/load"/>
 
         </LinearLayout>
 

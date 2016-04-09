@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
 
     private static String LOADED_IMAGE = "image";
     private static String LOADED_IMPRESSIONIST = "impressionist";
+    private boolean pressed = false;
 
     private Bitmap currentImage;
     //private Bitmap impressionistImage;
@@ -102,14 +104,14 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
         imageView.destroyDrawingCache();
         imageView.setImageBitmap(currentImage);
         imageView.setDrawingCacheEnabled(true);
-
+/*
         imageView.destroyDrawingCache();
         Bitmap impressionistImage = Bitmap.createBitmap(imageView.getDrawingCache());
         imageView.setDrawingCacheEnabled(true);
 
         _impressionistView.setBackground(new BitmapDrawable(getResources(), impressionistImage));
 
-
+*/
         //_impressionistView.setBackground(new BitmapDrawable(getResources(), currentImage));
 
         //reset impressionist image
@@ -139,21 +141,37 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
 
     public void onButtonClickBackground(View v) {
 
+
+
         Log.d("", "At onButtonClickBackground");
 
-        ImageView imageView = (ImageView) findViewById(R.id.viewImage);
+        if(pressed == true){
 
-        imageView.destroyDrawingCache();
-        Bitmap impressionistImage = Bitmap.createBitmap(imageView.getDrawingCache());
-        imageView.setDrawingCacheEnabled(true);
+            _impressionistView.setBackgroundColor(Color.WHITE);
 
-        _impressionistView.setBackground(new BitmapDrawable(getResources(), impressionistImage));
+            pressed = false;
+
+        } else {
+
+            ImageView imageView = (ImageView) findViewById(R.id.viewImage);
+
+            imageView.destroyDrawingCache();
+            Bitmap impressionistImage = Bitmap.createBitmap(imageView.getDrawingCache());
+            imageView.setDrawingCacheEnabled(true);
+
+            _impressionistView.setBackground(new BitmapDrawable(getResources(), impressionistImage));
 
 
 
-        // destroy the drawing cache to ensure that when a new image is loaded, its cached
+            // destroy the drawing cache to ensure that when a new image is loaded, its cached
 
-        imageView.destroyDrawingCache();
+            imageView.destroyDrawingCache();
+
+            pressed = true;
+
+        }
+
+
     }
 
 
@@ -355,6 +373,10 @@ public class MainActivity extends AppCompatActivity implements OnMenuItemClickLi
                 imageView.destroyDrawingCache();
                 imageView.setImageBitmap(currentImage);
                 imageView.setDrawingCacheEnabled(true);
+
+                //remove old image
+                _impressionistView.setBackgroundColor(Color.WHITE);
+                pressed = false;
 
 /*
                 imageView.destroyDrawingCache();
